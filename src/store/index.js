@@ -14,7 +14,8 @@ export default new Vuex.Store({
       'done': true
     }],
     inputValue: '',
-    index: 5
+    index: 5,
+    pInputValue: ''
   },
   mutations: {
     initMarchList(state, marchList) {
@@ -29,7 +30,9 @@ export default new Vuex.Store({
       const obj = {
         'id': state.index,
         'info': state.inputValue,
-        'done': false
+        'done': false,
+        'isp': true,
+        'isinput': false
       }
       state.inputValue = ''
       state.marchList.push(obj)
@@ -66,6 +69,24 @@ export default new Vuex.Store({
       obj.done = params.status
       state.doneList.splice(index, 1)
       state.marchList.push(obj)
+    },
+    //改变p标签的值
+    changeEdit(state, params) {
+      const index = state.marchList.findIndex(item =>
+        item.id === params.id
+      )
+      state.marchList[index].isp = !state.marchList[index].isp
+      state.marchList[index].isinput = !state.marchList[index].isinput
+      state.pInputValue = params.value
+    },
+    saveEdit(state, params) {
+      state.pInputValue = params.value
+      const index = state.marchList.findIndex(item =>
+        item.id === params.id
+      )
+      state.marchList[index].info = state.pInputValue
+      state.marchList[index].isp = !state.marchList[index].isp
+      state.marchList[index].isinput = !state.marchList[index].isinput
     }
   },
   // 异步请求要写在actions中

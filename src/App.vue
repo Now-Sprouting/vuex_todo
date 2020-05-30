@@ -30,7 +30,17 @@
               name
               id
             />
-            <p>{{item.info}}</p>
+            <p v-if="item.isp" @click="(e)=>{changeEdit(e,item.id)}">{{item.info}}</p>
+            <p v-if="item.isinput">
+              <input
+                type="text"
+                id="ledit"
+                :value="pInputValue"
+                autofocus="autofocus"
+                selected="selected"
+                @blur="(e)=>{saveEdit(e,item.id)}"
+              />
+            </p>
             <a href="javascript:;">
               <span @click="removeMarchItemById(item.id)"></span>
             </a>
@@ -69,17 +79,13 @@
 import { mapState, mapGetters } from 'vuex'
 export default {
   data() {
-    return {
-      inputStyle: {
-        display: 'none'
-      }
-    }
+    return {}
   },
   created() {
     this.$store.dispatch('getMarchList')
   },
   computed: {
-    ...mapState(['marchList', 'doneList', 'inputValue']),
+    ...mapState(['marchList', 'doneList', 'inputValue', 'pInputValue']),
     ...mapGetters(['marchNum', 'donehNum'])
   },
   methods: {
@@ -119,8 +125,24 @@ export default {
         id: id
       }
       this.$store.commit('changeDoneState', params)
-    }
+    },
     // 改变p标签内容
+    changeEdit(e, id) {
+      // console.log(e.target.innerHTML)
+      const params = {
+        value: e.target.innerHTML,
+        id: id
+      }
+      this.$store.commit('changeEdit', params)
+    },
+    saveEdit(e, id) {
+      // console.log(e.target.value)
+      const params = {
+        value: e.target.value,
+        id: id
+      }
+      this.$store.commit('saveEdit', params)
+    }
   }
 }
 </script>
